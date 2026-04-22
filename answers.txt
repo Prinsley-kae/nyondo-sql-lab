@@ -189,6 +189,27 @@ The UNION operator merges the products query with the users table, exposing sens
 
 ------------------------------------------------------------
 
+------------------------------------------------------------
+TASK 5 - INPUT VALIDATION
+------------------------------------------------------------
+
+Search 1: 'cement'
+Result: (products returned)
+
+Search 2: ''
+Result: []
+
+Search 3: '<script>'
+Result: []
+
+Login 1: admin / admin123
+Result: { id: 1, username: 'admin', password: 'admin123', role: 'admin' }
+
+Login 2: admin / ab
+Result: null
+
+Login 3: ad min / pass123
+Result: null
 
 SCREENSHOT:
 screenshots/task1.png
@@ -200,4 +221,5 @@ screenshots/task3-1.png
 screenshots/task3-2.png
 screenshots/task3-3.png
 screenshots/task3-4.png
+screenshots/task5.png
 
